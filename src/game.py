@@ -1,8 +1,10 @@
 import pygame
-import screen
 import sys
 import math
 import random
+
+from screen import Screen
+from elements.clickables import Target, Button
 
 
 class States: # Game states
@@ -11,19 +13,31 @@ class States: # Game states
     END = 3
 
 
-class Game():
+class Game:
     def __init__(self):
 
         # Build screen
-        screen.build()
+        self.screen = Screen()
+        self.border = (
+            self.screen.border_th,
+            self.screen.border_th + self.screen.res[0],
+            self.screen.border_th,
+            self.screen.border_th + self.screen.res[1])
 
         # Initialize variables
         self.running = False
         self.click = False
         self.mouse_pos = (0, 0)
 
+        # Initialize clickable entities
+        self.target_rad = 100
+        self.targets = (Target(
+            pos=(self.screen.res[0]/2, self.screen.res[1]/2),
+            dimensions=self.target_rad,
+            color="red"))
 
-    def indep_refresh(self):
+
+    def refresh_vars(self):
         """
         Refreshes variables that are independent of game state
         """
@@ -42,30 +56,28 @@ class Game():
                     self.mouse_pos = pygame.mouse.get_pos()
 
 
-    def start(self):
+    def run(self):
 
         self.running = True
         while self.running:
-            self.indep_refresh()
+            self.refresh_vars()
+            self.screen.disp.fill('lightblue')
 
             match state:
                 case States.START:
-                    if self.click:
-                        # Handle click. Are any START screen buttons pressed?
+                    if self.click: # Handle click. Are any START screen buttons pressed?
                         pass
                     # Draw START screen
                     break
                 
                 case States.PLAYING:
-                    if self.click:
-                        # Handle click. Are any PLAYING screen buttons pressed?
-                        pass
-                    # Draw PLAYING screen
+                    for target in self.targets:
+                        if self.click and target.in_boundary(self.mouse_pos): target.hit(self.border) # Replace a Target if it has been hit
+                        pygame.draw.circle(self.screen.disp, target.color, target.pos, target.dimensions) # Draw PLAYING screen
                     break
                 
                 case States.END:
-                    if self.click:
-                        # Handle click. Are any END screen buttons pressed?
+                    if self.click: # Handle click. Are any END screen buttons pressed?
                         pass
                     # Draw END screen
                     break
@@ -73,45 +85,5 @@ class Game():
                 case _: # Assume state hasn't been initialized yet
                     state = States.START
                     break
-            
-            pass
-
-        while running:
-            events = pygame.event.get()
-            screen.fill('lightblue')
-
-            for event in events:
-                
-                if event.type == pygame.QUIT:
-                    running = False
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-
-                    # Left click
-                    if event.button == 1:
-                        mouse_pos = pygame.mouse.get_pos()
-
-                        # Check robot state
-                        if robot_state == START:
-                            pass
-
-                        elif robot_state == PLAYING:
-
-                            # If hit, place a new circle in a random location on the screen and add 1 to the hits counter
-                            if eventhandlers.Check_circle_collision(mouse_pos, circle_pos[0], circle_pos[1], circle_rad):
-                                circle_pos = (random.randint(border_x[0], border_x[1]), random.randint(border_y[0], border_y[1]))
-                                hits += 1
-
-                            # If missed, add 1 to the misses counter and reduce the circle radius. If the misses counter gets to 3 strikes, terminate the program
-                            else:
-                                misses += 1
-                                circle_rad -= 25
-                                if misses == 3:
-                                    running = False
-
-                        elif robot_state == END:
-                            pass
-
-            pygame.draw.circle(screen, "red", circle_pos, circle_rad)
 
             pygame.display.update()

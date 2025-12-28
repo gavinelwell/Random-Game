@@ -1,6 +1,13 @@
 import pygame
 
-def build():
-    screen_res = (1280, 720)
-    border_thickness = 10
-    screen = pygame.display.set_mode(screen_res)
+class Screen:
+    def __init__(self, res=None, border_th=None, disp=None):
+        
+        # Default variables
+        if res==None: res = (1280, 720)
+        if border_th==None: border_th = 10
+        if disp==None: disp = pygame.display.set_mode(res)
+
+        self.res = res
+        self.border_th = border_th
+        self.disp = disp
