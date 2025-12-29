@@ -3,6 +3,9 @@ class Clickable:
         self.pos = pos
         self.dimensions = dimensions
         self.color = color
+    
+    def __iter__(self):
+        return iter(self)
 
     def in_boundary(self, coordinates) -> bool:
         '''

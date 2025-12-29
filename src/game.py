@@ -28,13 +28,14 @@ class Game:
         self.running = False
         self.click = False
         self.mouse_pos = (0, 0)
+        self.state = States.PLAYING
 
         # Initialize clickable entities
         self.target_rad = 100
-        self.targets = (Target(
+        self.targets = [Target(
             pos=(self.screen.res[0]/2, self.screen.res[1]/2),
             dimensions=self.target_rad,
-            color="red"))
+            color="red")]
 
 
     def refresh_vars(self):
@@ -63,7 +64,7 @@ class Game:
             self.refresh_vars()
             self.screen.disp.fill('lightblue')
 
-            match state:
+            match self.state:
                 case States.START:
                     if self.click: # Handle click. Are any START screen buttons pressed?
                         pass
