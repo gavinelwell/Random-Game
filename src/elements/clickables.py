@@ -17,6 +17,7 @@ class Clickable:
         '''
         pass
 
+import math
 import random
 class Target(Clickable):
 
@@ -28,7 +29,7 @@ class Target(Clickable):
     def in_boundary(self, coordinates) -> bool:
         bounds_x = coordinates[0] - self.pos[0]
         bounds_y = coordinates[1] - self.pos[1]
-        return (bounds_x**2 + bounds_y**2) <= self.dimensions
+        return math.sqrt(bounds_x**2 + bounds_y**2) <= self.dimensions
     
     def hit(self, border):
         '''

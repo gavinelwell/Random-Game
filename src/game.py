@@ -61,6 +61,7 @@ class Game:
 
         self.running = True
         while self.running:
+
             self.refresh_vars()
             self.screen.disp.fill('lightblue')
 
@@ -69,22 +70,18 @@ class Game:
                     if self.click: # Handle click. Are any START screen buttons pressed?
                         pass
                     # Draw START screen
-                    break
                 
                 case States.PLAYING:
                     for target in self.targets:
                         if self.click and target.in_boundary(self.mouse_pos): target.hit(self.border) # Replace a Target if it has been hit
                         pygame.draw.circle(self.screen.disp, target.color, target.pos, target.dimensions) # Draw PLAYING screen
-                    break
                 
                 case States.END:
                     if self.click: # Handle click. Are any END screen buttons pressed?
                         pass
                     # Draw END screen
-                    break
                 
                 case _: # Assume state hasn't been initialized yet
-                    state = States.START
-                    break
+                    self.state = States.START
 
             pygame.display.update()
