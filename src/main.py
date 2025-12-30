@@ -5,6 +5,7 @@ from game import Game
 def main():
 
     pygame.init()
+    pygame.font.init()
     
     game_loop = Game()
     game_loop.run()
