@@ -16,3 +16,7 @@ class Score:
     
     def calculate(self):
         return self.hits*1000 - self.misses*10
+    
+    def reset(self):
+        self.hits = 0
+        self.misses = 0

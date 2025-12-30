@@ -44,10 +44,12 @@ class Button(Clickable):
 
     # For a button, self.dimensions is a tuple of ints representing the width and height
     # The bottom left corner of the Button is self.pos
-    def __init__(self, pos, dimensions, color):
+    def __init__(self, pos, dimensions, color, text):
         super().__init__(pos, dimensions, color)
+        self.rect = (pos[0], pos[1], dimensions[0], dimensions[1])
+        self.text = text
     
     def in_boundary(self, coordinates) -> bool:
-        in_bounds_x = self.pos[0] <= coordinates[0] <= self.pos[0] + self.dimensions[0]
-        in_bounds_y = self.pos[1] <= coordinates[1] <= self.pos[1] + self.dimensions[1]
+        in_bounds_x = 0 <= coordinates[0] - self.rect[0] <= self.rect[2]
+        in_bounds_y = 0 <= coordinates[1] - self.rect[1] <= self.rect[3]
         return in_bounds_x and in_bounds_y

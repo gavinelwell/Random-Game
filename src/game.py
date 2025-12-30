@@ -1,7 +1,7 @@
 import pygame
 from interfaces.score import Score
 
-from screen import Screen
+from interfaces.screen import Screen
 from elements.clickables import Target, Button
 
 
@@ -28,11 +28,17 @@ class Game:
         self.score = Score()
 
         # Clickable Entities
-        self.target_rad = 100
+        self.target_rad = 50
         self.targets = [Target(
             pos=(self.screen.res[0]/2, self.screen.res[1]/2),
             dimensions=self.target_rad,
             color="red")]
+        
+        self.restart_button = Button(
+            (100, 100 + 3 * (self.font_size + 10) + 2 * self.font_size),
+            (210, 60),
+            "red",
+            "RESTART")
         
         # Initialize variables
         self.running = False
@@ -100,9 +106,16 @@ class Game:
 
 
     def handlestate_end(self):
+        if self.click: # Handle click. Are any END screen buttons pressed?
+            if self.restart_button.in_boundary(self.mouse_pos):
+                self.score.reset()
+                self.targets[0].pos = (self.screen.res[0]/2, self.screen.res[1]/2)
+                self.state = States.PLAYING
+                return
+
         self.screen.disp.blit(self.font.render("GAME OVER", False, "red"), (100, 100))
         self.screen.disp.blit(self.font.render(f"HITS: {self.score.hits}", False, "red"), (100, 100 + self.font_size + 10))
         self.screen.disp.blit(self.font.render(f"MISSES: {self.score.misses}", False, "red"), (100, 100 + 2 * (self.font_size + 10)))
 
-        if self.click: # Handle click. Are any END screen buttons pressed?
-            pass
+        pygame.draw.rect(self.screen.disp, self.restart_button.color, self.restart_button.rect)
+        self.screen.disp.blit(self.font.render(self.restart_button.text, False, "black"), (self.restart_button.pos[0] + 10, self.restart_button.pos[1] + 10))
